@@ -119,6 +119,7 @@ class Solution
            Node* frontNode = temp.first;
            int hd = temp.second;
            
+        //   if entry is not present corresponding to 'hd',then it gives topNode.end() 
            if(topNode.find(hd) == topNode.end())
                 topNode[hd] = frontNode->data;
             
