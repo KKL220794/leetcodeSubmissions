@@ -41,23 +41,24 @@ struct Node
 */
 class Solution{
     public:
-    int findPosition(int in[], int element, int n){
+    void createMapping(int in[], map<int, int> &nodeToIndex, int n){
         for(int i=0; i<n; i++){
-            if(in[i] == element) return i;
+            nodeToIndex[in[i]] = i;
         }
-        return -1;
     }
     
-    Node* solve(int in[], int pre[], int &preOrderIndex, int n, int inOrderStart, int inOrderEnd){
+    Node* solve(int in[], int pre[], int &preOrderIndex, 
+                int n, int inOrderStart, int inOrderEnd, map<int,int> &nodeToIndex){
         
         if(preOrderIndex >= n || inOrderStart > inOrderEnd) return NULL;
         
         int element = pre[preOrderIndex++];
         Node* root = new Node(element);
-        int pos = findPosition(in, element, n);
         
-        root->left = solve(in, pre, preOrderIndex, n, inOrderStart, pos-1);
-        root->right = solve(in, pre, preOrderIndex, n, pos+1, inOrderEnd);
+        int pos = nodeToIndex[element];
+        
+        root->left = solve(in, pre, preOrderIndex, n, inOrderStart, pos-1, nodeToIndex);
+        root->right = solve(in, pre, preOrderIndex, n, pos+1, inOrderEnd, nodeToIndex);
         
         return root;
     }
@@ -65,7 +66,10 @@ class Solution{
     Node* buildTree(int in[],int pre[], int n)
     {
         int preOrderIndex = 0;
-        Node* ans = solve(in, pre, preOrderIndex, n, 0, n-1);
+        map<int,int> nodeToIndex;
+        createMapping(in, nodeToIndex, n);
+        
+        Node* ans = solve(in, pre, preOrderIndex, n, 0, n-1, nodeToIndex);
         return ans;
     }
 };
