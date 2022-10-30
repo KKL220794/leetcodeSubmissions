@@ -24,6 +24,8 @@ public:
         
         int element = preorder[preorderIndex++];
         TreeNode* root = new TreeNode(element);
+        
+        if(inorderStart == inorderEnd) return root;
         int pos = findPosition(inorder, element, n);
         
         root->left = solve(preorder, inorder, preorderIndex, inorderStart, pos-1, n);
